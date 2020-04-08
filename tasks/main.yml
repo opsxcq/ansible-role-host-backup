@@ -1,12 +1,14 @@
 ---
 # Backup 
 
-- apt:
+- name: "Backup | Installing system dependencies"
+  apt:
     pkg:
       - python-pip
       - gpg
 
-- pip:
+- name: "Backup | Installing python dependencies"
+  pip:
     name: boto3
 
 - name: "Backup | Cleaning up the backup directory"
