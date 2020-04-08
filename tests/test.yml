@@ -1,0 +1,13 @@
+- hosts: all
+  vars:
+    backup_script:
+      echo nothing > /data/backup/backup_$(date)
+      echo nothing2 > /data/backup/backup2_$(date)
+    gpg_email: opsxcq@strm.sh
+    bucket: backups
+    folder: demo
+  tasks:
+  - name: Another task
+    debug: msg="Some additional task here"
+  roles:
+    - ../..

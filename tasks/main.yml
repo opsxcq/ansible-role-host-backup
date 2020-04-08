@@ -1,0 +1,31 @@
+---
+# Backup 
+
+- apt:
+    pkg:
+      - python-pip
+      - gpg
+
+- pip:
+    name: boto3
+
+- name: "Backup | Cleaning up the backup directory"
+  file:
+    path: "/data/backup/"
+    state: absent
+
+- name: "Backup | Ensure that the backup directory exists"
+  file:
+    path: "/data/backup/"
+    state: directory
+
+- name: "Backup | Execute backup script"
+  shell: "{{ backup_script }}"
+  when: backup_script is defined
+
+- name: "Backup | List files to backup"
+  shell: ls /data/backup/*
+  register: targets
+
+- include_tasks: backup.yml
+  loop: "{{ targets.stdout_lines }}"

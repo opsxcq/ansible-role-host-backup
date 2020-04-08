@@ -1,0 +1,37 @@
+- name: "Backup | Setting target for encryption"
+  set_fact:
+    source: "{{ item }}"
+
+- name: "Backup | Setting target for encryption"
+  set_fact:
+    target: "{{ item + '.gpg' }}"
+
+- name: "Backup | Setting target for encryption"
+  set_fact:
+    target_name: "{{ item + '.gpg' }}"
+
+- name: "Backup | Encrypting {{ item }}"
+  shell: >
+    gpg
+    --batch
+    --output "{{ target }}"
+    --encrypt
+    --recipient {{ gpg_email }}
+    "{{ source }}"
+- name: "Backup | cleaning up plain text file {{ source }}"
+  file:
+    path: "{{ source }}"
+    state: absent
+
+- name: "Backup | Uploading {{ target_name }} to {{ bucket }}/{{ folder }}"
+  aws_s3:
+    bucket: "{{ bucket }}"
+    object: "{{ folder }}/{{ target_name | basename }}"
+    src: "{{ target }}"
+    mode: put
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+- name: "Backup | cleaning up file {{ target_name }}"
+  file:
+    path: "{{ target }}"
+    state: absent
