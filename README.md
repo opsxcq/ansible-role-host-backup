@@ -42,3 +42,10 @@ follow Ansible standards.
   roles:
     - opsxcq.host_backup
 ```
+
+# Requirements file
+
+```yml
+- src: git+https://github.com/opsxcq/ansible-role-host-backup.git
+  name: "opsxcq.host_backup
+```
