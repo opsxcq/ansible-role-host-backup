@@ -15,6 +15,7 @@
     gpg
     --batch
     --output "{{ target }}"
+    --trust-model always
     --encrypt
     --recipient {{ gpg_email }}
     "{{ source }}"
