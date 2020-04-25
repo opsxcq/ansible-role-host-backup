@@ -23,6 +23,11 @@
 
 - name: "Backup | Execute backup script"
   shell: "{{ backup_script }}"
+  register: backup_exec
+  when: backup_script is defined
+
+- name: "Backup | List output"
+  debug: var=backup_exec.stdout_lines
   when: backup_script is defined
 
 - name: "Backup | List files to backup"
