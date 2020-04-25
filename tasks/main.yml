@@ -12,9 +12,31 @@
     name: boto3
 
 - name: "Backup | Cleaning up the backup directory"
-  file:
-    path: "/data/backup/"
-    state: absent
+  block:
+  - name: "Backup | Collect a list of all files to clean up"
+    find:
+      paths: "/data/backup/"
+      hidden: True
+      recurse: True
+    register: collected_files
+
+  - name: "Backup | Collect a list of all directories to clean up"
+    find:
+      paths: "/data/backup/"
+      hidden: True
+      recurse: True
+      file_type: directory
+    register: collected_directories
+
+  - name: "Backup | Clean up old backups"
+    file:
+      path: "{{ item.path }}"
+      state: absent
+    with_items: >
+      {{
+        collected_files.files
+        + collected_directories.files
+      }}
 
 - name: "Backup | Ensure that the backup directory exists"
   file:
