@@ -15,14 +15,14 @@
   block:
   - name: "Backup | Collect a list of all files to clean up"
     find:
-      paths: "/data/backup/"
+      paths: "/data/backups/"
       hidden: True
       recurse: True
     register: collected_files
 
   - name: "Backup | Collect a list of all directories to clean up"
     find:
-      paths: "/data/backup/"
+      paths: "/data/backups/"
       hidden: True
       recurse: True
       file_type: directory
@@ -40,7 +40,7 @@
 
 - name: "Backup | Ensure that the backup directory exists"
   file:
-    path: "/data/backup/"
+    path: "/data/backups/"
     state: directory
 
 - name: "Backup | Execute backup script"
@@ -53,7 +53,7 @@
   when: backup_script is defined
 
 - name: "Backup | List files to backup"
-  shell: ls /data/backup/*
+  shell: ls /data/backups/*
   register: targets
 
 - include_tasks: backup.yml
