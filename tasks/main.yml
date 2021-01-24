@@ -11,6 +11,27 @@
   pip:
     name: boto3
 
+- name: "Backup | Ensure that the backup directory exists"
+  file:
+    path: "/data/backups/"
+    state: directory
+
+- name: "Backup | Execute backup script"
+  shell: "{{ backup_script }}"
+  register: backup_exec
+  when: backup_script is defined
+
+- name: "Backup | List output"
+  debug: var=backup_exec.stdout_lines
+  when: backup_script is defined
+
+- name: "Backup | List files to backup"
+  shell: ls -lhR /data/backups/
+  register: targets
+
+- include_tasks: backup.yml
+  loop: "{{ targets.stdout_lines }}"
+
 - name: "Backup | Cleaning up the backup directory"
   block:
   - name: "Backup | Collect a list of all files to clean up"
@@ -37,24 +58,3 @@
         collected_files.files
         + collected_directories.files
       }}
-
-- name: "Backup | Ensure that the backup directory exists"
-  file:
-    path: "/data/backups/"
-    state: directory
-
-- name: "Backup | Execute backup script"
-  shell: "{{ backup_script }}"
-  register: backup_exec
-  when: backup_script is defined
-
-- name: "Backup | List output"
-  debug: var=backup_exec.stdout_lines
-  when: backup_script is defined
-
-- name: "Backup | List files to backup"
-  shell: ls -lhR /data/backups/
-  register: targets
-
-- include_tasks: backup.yml
-  loop: "{{ targets.stdout_lines }}"
