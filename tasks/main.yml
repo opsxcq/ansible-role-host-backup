@@ -53,7 +53,7 @@
   when: backup_script is defined
 
 - name: "Backup | List files to backup"
-  shell: ls /data/backups/*
+  shell: ls -lhR /data/backups/
   register: targets
 
 - include_tasks: backup.yml
