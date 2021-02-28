@@ -1,16 +1,16 @@
 - name: "Backup | Setting target for encryption"
   set_fact:
-    source: "{{ item }}"
+    source: "{{ item.path }}"
 
 - name: "Backup | Setting target for encryption"
   set_fact:
-    target: "{{ item + '.gpg' }}"
+    target: "{{ item.path + '.gpg' }}"
 
 - name: "Backup | Setting target for encryption"
   set_fact:
-    target_name: "{{ item + '.gpg' }}"
+    target_name: "{{ item.path + '.gpg' }}"
 
-- name: "Backup | Encrypting {{ item }}"
+- name: "Backup | Encrypting {{ item.path }}"
   shell: >
     gpg
     --batch

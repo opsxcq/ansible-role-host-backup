@@ -25,12 +25,20 @@
   debug: var=backup_exec.stdout_lines
   when: backup_script is defined
 
-- name: "Backup | List files to backup"
-  shell: ls -lhR /data/backups/
-  register: targets
+- name: "Backup | Processing files"
+  block:
+  - name: "Backup | Collect a list of all files backup"
+    find:
+      paths: "/data/backups/"
+      hidden: True
+      recurse: True
+    register: collected_files
 
-- include_tasks: backup.yml
-  loop: "{{ targets.stdout_lines }}"
+  - include_tasks: backup.yml
+    with_items: >
+      {{
+        collected_files.files
+      }}
 
 - name: "Backup | Cleaning up the backup directory"
   block:
