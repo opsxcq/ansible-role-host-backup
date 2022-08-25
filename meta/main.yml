@@ -8,5 +8,5 @@ galaxy_info:
   platforms:
    - name: Debian
      versions:
-       - buster
+       - bullseye
   galaxy_tags: [linux, server, backup]
